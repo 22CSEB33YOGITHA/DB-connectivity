@@ -1,0 +1,53 @@
+<%@ page import="java.sql.*" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Books Information</title>
+</head>
+<body>
+    <%
+        int totalBooks = 0;
+        double averagePrice = 0.0;
+        double highestPrice = 0.0;
+        String url = "jdbc:derby://localhost:1527/Books";
+        String username = "yogi";
+        String password = "APP";
+        Connection c = null;
+        Statement stmt = null;
+        c = DriverManager.getConnection(url, username, password);
+        stmt = c.createStatement();
+        ResultSet rs1 = stmt.executeQuery("SELECT COUNT(*) AS total FROM books");
+        if (rs1.next()) {
+            totalBooks = rs1.getInt("total");
+        }
+        ResultSet rs2 = stmt.executeQuery("SELECT AVG(price) AS average FROM books");
+        if (rs2.next()) {
+            averagePrice = rs2.getDouble("average");
+        }
+        ResultSet rs3 = stmt.executeQuery("SELECT MAX(price) AS highest FROM books");
+        if (rs3.next()) {
+            highestPrice = rs3.getDouble("highest");
+        }
+        if (rs1 != null) rs1.close();
+        if (rs2 != null) rs2.close();
+        if (rs3 != null) rs3.close();
+        if (stmt != null) stmt.close();
+        if (c != null) c.close();
+    %>
+    <div>
+        <table border="1">
+            <tr>
+                <th>Total Number of Books</th>
+                <th>Average Price of Books</th>
+                <th>Highest Priced Book</th>
+            </tr>
+            <tr>
+                <td><%= totalBooks %></td>
+                <td><%= averagePrice %></td>
+                <td><%= highestPrice %></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
